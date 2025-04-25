@@ -54,7 +54,7 @@ import kotlinx.coroutines.flow.collectLatest
 @Composable
 fun EggHuntScreen(
     modifier: Modifier = Modifier,
-    viewModel: EggHuntViewModel = viewModel(EggHuntViewModel::class)
+    viewModel: EggHuntViewModel
 ) {
     val state = viewModel.state.collectAsStateWithLifecycle()
     Scaffold(
@@ -73,15 +73,6 @@ fun EggHuntScreen(
             }
         )
     }
-    /*LaunchedEffect(key1 = Unit) {
-        viewModel.effect.collectLatest { effect ->
-            when (effect) {
-                is EggHuntEffect.OnShowDialog -> {
-                    Log.d("EggHuntScreen", "OnShowDialog: ${state.value.currentEgg}")
-                }
-            }
-        }
-    }*/
 }
 
 @Composable

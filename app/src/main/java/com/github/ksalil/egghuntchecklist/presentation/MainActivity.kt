@@ -22,10 +22,26 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.core.view.WindowCompat
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.github.ksalil.egghuntchecklist.data.DataStoreEggHuntDataSource
+import com.github.ksalil.egghuntchecklist.data.EggHuntDataSource
+import com.github.ksalil.egghuntchecklist.domain.EggHuntRepository
 import com.github.ksalil.egghuntchecklist.presentation.ui.theme.Background
 import com.github.ksalil.egghuntchecklist.presentation.ui.theme.EggHuntChecklistTheme
 
 class MainActivity : ComponentActivity() {
+    private val dataSource: EggHuntDataSource by lazy {
+        DataStoreEggHuntDataSource(applicationContext)
+    }
+
+    private val repository: EggHuntRepository by lazy {
+        EggHuntRepository(dataSource)
+    }
+
+    private val viewModelFactory: EggHuntViewModelFactory by lazy {
+        EggHuntViewModelFactory(repository)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -39,7 +55,8 @@ class MainActivity : ComponentActivity() {
                     isAppearanceLightStatusBars = !isDarkTheme
                     isAppearanceLightNavigationBars = !isDarkTheme
                 }
-                EggHuntScreen()
+                val viewModel: EggHuntViewModel = viewModel(factory = viewModelFactory)
+                EggHuntScreen(viewModel = viewModel)
             }
         }
     }

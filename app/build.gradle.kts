@@ -51,6 +51,7 @@ dependencies {
     implementation(libs.androidx.material3)
     implementation(libs.google.fonts)
     implementation(libs.view.model.compose)
+    implementation(libs.data.store.preferences)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

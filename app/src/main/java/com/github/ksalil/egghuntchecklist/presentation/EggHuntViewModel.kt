@@ -3,6 +3,7 @@ package com.github.ksalil.egghuntchecklist.presentation
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.github.ksalil.egghuntchecklist.data.eggLocationList
+import com.github.ksalil.egghuntchecklist.domain.EggHuntRepository
 import com.github.ksalil.egghuntchecklist.presentation.mvi.EggHuntAction
 import com.github.ksalil.egghuntchecklist.presentation.mvi.EggHuntEffect
 import com.github.ksalil.egghuntchecklist.presentation.mvi.EggHuntState
@@ -13,13 +14,23 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-class EggHuntViewModel : ViewModel() {
+class EggHuntViewModel(
+    private val repository: EggHuntRepository
+) : ViewModel() {
 
     private val _state = MutableStateFlow(EggHuntState(eggList = eggLocationList))
     val state = _state.asStateFlow()
 
-    private val _effect = Channel<EggHuntEffect>()
-    val effect = _effect.receiveAsFlow()
+    init {
+        viewModelScope.launch {
+            val foundEggs = repository.getFoundEggs()
+            _state.update {
+                it.copy(
+                    foundEggs = foundEggs
+                )
+            }
+        }
+    }
 
     fun onAction(action: EggHuntAction) {
         when (action) {
@@ -52,13 +63,14 @@ class EggHuntViewModel : ViewModel() {
             } else {
                 updatedEggIds.add(eggId)
             }
+            // Save updated eggs
+            repository.saveFoundEggs(updatedEggIds)
             _state.update {
                 it.copy(
                     currentEgg = egg,
                     foundEggs = updatedEggIds
                 )
             }
-            _effect.send(EggHuntEffect.OnShowDialog)
         }
     }
 }
