@@ -37,7 +37,8 @@ import kotlinx.coroutines.launch
 fun AnimatingProgressHeader(
     isEggChecked: Boolean,
     animationDurationMillis: Int = 4000,
-    seconds: Int = 4
+    seconds: Int = 4,
+    onProgressCompleted: () -> Unit
 ) {
     val progress = remember { Animatable(1f) }
     var secondsRemaining by remember { mutableIntStateOf(seconds) }
@@ -122,6 +123,9 @@ fun AnimatingProgressHeader(
             while (secondsRemaining > 0) {
                 delay(1000)
                 secondsRemaining--
+            }
+            if (secondsRemaining == 0) {
+                onProgressCompleted()
             }
         }
     }

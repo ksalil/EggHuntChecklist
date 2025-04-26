@@ -1,6 +1,5 @@
 package com.github.ksalil.egghuntchecklist.presentation
 
-import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -10,7 +9,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -22,7 +20,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -37,19 +34,16 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.github.ksalil.egghuntchecklist.R
 import com.github.ksalil.egghuntchecklist.data.eggLocationList
 import com.github.ksalil.egghuntchecklist.data.getEasterFacts
 import com.github.ksalil.egghuntchecklist.presentation.mvi.EggHuntAction
-import com.github.ksalil.egghuntchecklist.presentation.mvi.EggHuntEffect
 import com.github.ksalil.egghuntchecklist.presentation.mvi.EggHuntState
 import com.github.ksalil.egghuntchecklist.presentation.ui.theme.Background
 import com.github.ksalil.egghuntchecklist.presentation.ui.theme.ButtonBackgroundGradient
 import com.github.ksalil.egghuntchecklist.presentation.ui.theme.EggHuntChecklistTheme
 import com.github.ksalil.egghuntchecklist.presentation.ui.theme.Yellow
 import com.github.ksalil.egghuntchecklist.presentation.ui.theme.titleGradient
-import kotlinx.coroutines.flow.collectLatest
 
 @Composable
 fun EggHuntScreen(
@@ -87,7 +81,6 @@ fun EggHuntScreenContent(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         item {
-
             Text(
                 text = stringResource(R.string.screen_title),
                 style = MaterialTheme.typography.headlineSmall.copy(
@@ -164,7 +157,10 @@ fun ShowEasterDialog(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center
             ) {
-                AnimatingProgressHeader(isEggChecked = isEggChecked)
+                AnimatingProgressHeader(
+                    isEggChecked = isEggChecked,
+                    onProgressCompleted = onDismiss
+                )
                 Spacer(modifier = Modifier.height(8.dp))
                 if (isEggChecked) {
                     Text(
